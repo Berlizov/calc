@@ -4,11 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UI extends JFrame implements ActionListener {
-    CalcField cf;
+    final CalcField cf;
     public UI() {
         super("Calculator");
         setMinimumSize(new Dimension(300, 300));
-
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -59,7 +58,7 @@ public class UI extends JFrame implements ActionListener {
             else
                 cf.appendMainText(button.getText());
         }
-        else if(button.getText().equals(","))
+        else if(button.getText().equals("."))
             cf.appendMainText(button.getText());
         else if(button.getText().equals("CE"))
             cf.setText("");
