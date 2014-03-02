@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 public class UI extends JFrame implements ActionListener {
     final CalcField cf;
     boolean func = false;
+    boolean func11 = false;
+    boolean add = true;
+    String last_oper = "+0";
+    String memory = "0";
 
     public UI() {
         super("Calculator");
@@ -19,9 +23,7 @@ public class UI extends JFrame implements ActionListener {
         c.gridy = 0;
         c.gridwidth = 5;
         cf = new CalcField();
-        cf.setMemory(true);
         add(cf, c);
-
         String[][] str = {{"MC", "MR", "MS", "M+", "M-"},
                 {"←", "CE", "C", "±", "√"},
                 {"7", "8", "9", "/", "%"},
@@ -37,8 +39,6 @@ public class UI extends JFrame implements ActionListener {
                         c.gridwidth = 2;
                     if (str[i - 1][j].equals("="))
                         c.gridheight = 2;
-
-
                     c.gridx = j;
                     c.gridy = i;
                     JButton b = new JButton(str[i - 1][j]);
@@ -51,40 +51,102 @@ public class UI extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JButton button = (JButton) e.getSource();
-        if ((button.getText().charAt(0) >= '0') && (button.getText().charAt(0) <= '9')) {
+        String string = ((JButton) e.getSource()).getText();
+        if ((string.length() == 1) && (string.charAt(0) >= '0') && (string.charAt(0) <= '9')) {
+            if (!add) {
+                cf.clearMainString();
+                cf.clearAdditionalString();
+                add = true;
+            }
+            func11 = false;
             if (func) {
                 cf.clearMainString();
                 func = false;
             }
             if (cf.getText().equals("0"))
-                cf.setMainString(button.getText());
+                cf.setMainString(string);
             else
-                cf.appendMainString(button.getText());
-        }else if (button.getText().equals(","))
+                cf.appendMainString(string);
+        } else if (string.equals(",")) {
+            if (func) {
+                cf.clearMainString();
+                func = false;
+            }
             cf.appendMainString(".");
-        else if (button.getText().equals("←")) {
+        } else if (string.equals("MC")) {
+            cf.setMemory(false);
+            memory = "0";
+        } else if (string.equals("MR")) {
+            cf.setMainString(memory);
+        } else if (string.equals("MS")) {
+            cf.setMemory(true);
+            memory = cf.getMainString();
+        } else if (string.equals("M+")) {
+            cf.setMemory(true);
+            memory = String.valueOf(Double.parseDouble(memory) + Double.parseDouble(cf.getMainString()));
+        } else if (string.equals("M-")) {
+            cf.setMemory(true);
+            memory = String.valueOf(Double.parseDouble(memory) - Double.parseDouble(cf.getMainString()));
+        } else if (string.equals("←")) {
             cf.deleteLast();
-        }else if (button.getText().equals("CE"))
+        } else if (string.charAt(0) == 'C') {
             cf.clearMainString();
-        else if (button.getText().equals("C")) {
-            cf.clearMainString();
-            cf.clearAdditionalString();
-        }else if (button.getText().equals("±")) {
+            if (string.length() == 1){
+                cf.clearAdditionalString();
+                last_oper = "+0";
+                func = false;
+                func11 = false;
+                add = true;
+            }
+        } else if (string.equals("±")) {
             String str = cf.getMainString();
             if (str.charAt(0) == '-')
-                cf.setMainString(str.substring(1, str.length()));
-            else
-                cf.setMainString("-" + str);
+                cf.setText(str.substring(1, str.length()));
+            else if ((str.length()>1)||(Double.parseDouble(str) != 0))
+                cf.setText("-" + str);
             func = false;
-        }else if (button.getText().equals("=")) {
+        } else if (string.equals("1/x")) {
+            calc("reciproc");
+        } else if (string.equals("%")) {
+            cf.setMainString(String.valueOf(Double.parseDouble(Calculator.calculat(cf.getAdditionalString().substring(0, cf.getAdditionalString().length() - 1))) / 100 * Double.parseDouble(cf.getMainString())));
+        } else if (string.equals("√")) {
+            calc("sqrt");
+        } else if (string.equals("=")) {
+            if (add)
+                cf.appendAdditionalString(cf.getMainString());
+            add = true;
             func = true;
-            cf.appendAdditionalString(cf.getMainString());
+            func11 = true;
+            if (!cf.getAdditionalString().equals(Calculator.calculat(cf.getAdditionalString())))
+                last_oper = cf.getLastOperationAdditionalString();
+            else
+                cf.setAdditionalString(cf.getMainString() + last_oper);
             cf.setMainString(Calculator.calculat(cf.getAdditionalString()));
             cf.clearAdditionalString();
-        }else {
+        } else {
+            if (add)
+                cf.appendAdditionalString(cf.getMainString());
+            add = true;
+            if ((!func11)&&(func)) {
+                cf.clearLastOperationAdditionalString();
+                cf.appendAdditionalString(string);
+            } else {
+                cf.appendAdditionalString(string);
+                cf.setMainString(Calculator.calculat(cf.getAdditionalString().substring(0, cf.getAdditionalString().length() - 1)));
+            }
+            func11=false;
             func = true;
-            cf.appendAdditionalString(cf.getMainString() + button.getText());
         }
+    }
+
+    void calc(String oper) {
+        if (!add)
+            cf.clearLastOperationAdditionalString();
+        String s = oper + "(" + cf.getMainString() + ")";
+        cf.appendAdditionalString(s);
+        cf.setMainString(Calculator.calculat(s));
+        func = true;
+        func11 = true;
+        add = false;
     }
 }

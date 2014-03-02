@@ -1,35 +1,35 @@
+import java.util.Formatter;
+import java.util.Locale;
+
 public class Calculator {
-   /* public Calculator() {
-        System.out.print("\n"+calculat("0+0.3+0.235/reciproc(147)"));
-    }*/
-
     public static void main(String[] args) {
-        new UI();
-        // new Calculator();
-
+        new UI();  // new Calculator();
+        //System.out.print("****" + calculat("0+5+5+5+5+5+5+5"));
     }
 
     public static String calculat(String str) {
-        return parse(str);
-    }
-
-    public static String parse(String str) {
+        if (str.length() == 0)
+            str = "0";
         String[] oper = {"sqrt(", "reciproc("};
         for (int j = 0; j < oper.length; j++)
             while (true) {
                 int i = str.indexOf(oper[j]);
                 if (i < 0) break;
-                int ai = getDoubleIndex(str, i + oper[j].length(), false);
+                int ai = getDoubleIndex(str, i + oper[j].length() - 1, false);
                 Double a = doMath(Double.parseDouble(str.substring(i + oper[j].length(), ai)), oper[j].charAt(0));
                 str = str.substring(0, i) + String.valueOf(a) + str.substring(ai + 1, str.length());
             }
-        for (int i = 0; i < str.length(); i++)
+        for (int i = 1; i < str.length(); i++)
             if ((str.charAt(i) == '*') || (str.charAt(i) == '/') || (str.charAt(i) == '+') || (str.charAt(i) == '-')) {
                 int ai = getDoubleIndex(str, i, true);
+                System.out.print("\na=" + Double.parseDouble(str.substring(ai, i)));
                 int bi = getDoubleIndex(str, i, false);
+                System.out.print("\nb=" + Double.parseDouble(str.substring(i + 1, bi)));
                 Double a = doMath(Double.parseDouble(str.substring(ai, i)), Double.parseDouble(str.substring(i + 1, bi)), str.charAt(i));
                 System.out.print("\n" + str);
-                str = str.substring(0, ai) + String.valueOf(a) + str.substring(bi, str.length());
+                str = str.substring(0, ai) +  new Formatter(Locale.US).format("%.16f",a) + str.substring(bi, str.length());
+                System.out.print("\n!" + str);
+                i=1;
             }
         return str;
     }
@@ -37,13 +37,19 @@ public class Calculator {
     public static int getDoubleIndex(String str, int index, boolean invert) {
         int g = 1;
         int i = index + 2;
+        boolean t = false;
         if (invert) {
             g = -1;
             i = index - 1;
         }
         for (; (i >= 0) && (i < str.length()); i += g)
-            if (((str.charAt(i) < '0') || (str.charAt(i) > '9')) && (str.charAt(i) != '.'))
+            if (((str.charAt(i) < '0') || (str.charAt(i) > '9')) && (str.charAt(i) != '.') && (str.charAt(i) != '-'))
                 break;
+            else if ((str.charAt(i) == '-'))
+                if (t)
+                    break;
+                else
+                    t = true;
         if (!invert)
             return i;
         return i + 1;
