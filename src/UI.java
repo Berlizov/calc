@@ -3,13 +3,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UI extends JFrame implements ActionListener {
-    final CalcField cf;
-    boolean func = false;
-    boolean func11 = false;
-    boolean add = true;
-    String last_oper = "+0";
-    String memory = "0";
+class UI extends JFrame implements ActionListener {
+    private final CalcField cf;
+    private boolean func = false;
+    private boolean func11 = false;
+    private boolean add = true;
+    private String last_oper = "+0";
+    private String memory = "0";
 
     public UI() {
         super("Calculator");
@@ -79,7 +79,7 @@ public class UI extends JFrame implements ActionListener {
         } else if (string.equals("MR")) {
             cf.setMainString(memory);
         } else if (string.equals("MS")) {
-            cf.setMemory(true);
+            cf.setMemory(Double.valueOf(cf.getMainString())!=0);
             memory = cf.getMainString();
         } else if (string.equals("M+")) {
             cf.setMemory(true);

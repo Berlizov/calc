@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class CalcField extends JTextField {
+class CalcField extends JTextField {
     private boolean memory;
     private String additionalString;
 
@@ -35,7 +35,7 @@ public class CalcField extends JTextField {
         setFont(new Font(getFont().getFontName(), Font.PLAIN, getHeight() - 30));
         super.paint(g);
         g2d.setFont(new Font(getFont().getFontName(), Font.PLAIN, 12));
-        g2d.drawString(additionalString, (int) (getWidth() - (g2d.getFontMetrics().stringWidth(additionalString)) - 4), 12);
+        g2d.drawString(additionalString, getWidth() - (g2d.getFontMetrics().stringWidth(additionalString)) - 4, 12);
         if (memory) {
             g2d.setColor(Color.red);
             g2d.drawString("M", 12, getHeight() - 12);
@@ -63,7 +63,7 @@ public class CalcField extends JTextField {
 
     public void setMainString(String s) {
         int i=s.length();
-        if (s.indexOf(".") >= 0)
+        if (s.contains("."))
             for(i=s.length()-1;i>s.indexOf(".");i--)
                 if((s.charAt(i)!='0')&&(s.charAt(i)!='.'))
                 {i++;
@@ -94,7 +94,7 @@ public class CalcField extends JTextField {
         setAdditionalString(getAdditionalString().substring(0, getLastOperIndexAdditionalString() ));
     }
 
-    public int getLastOperIndexAdditionalString() {
+    int getLastOperIndexAdditionalString() {
         String s = getAdditionalString();
         int i = s.length()-1;
         boolean t = false;

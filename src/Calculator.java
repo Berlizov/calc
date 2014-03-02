@@ -1,7 +1,7 @@
 import java.util.Formatter;
 import java.util.Locale;
 
-public class Calculator {
+class Calculator {
     public static void main(String[] args) {
         new UI();  // new Calculator();
         //System.out.print("****" + calculat("0+5+5+5+5+5+5+5"));
@@ -11,12 +11,12 @@ public class Calculator {
         if (str.length() == 0)
             str = "0";
         String[] oper = {"sqrt(", "reciproc("};
-        for (int j = 0; j < oper.length; j++)
+        for (String anOper : oper)
             while (true) {
-                int i = str.indexOf(oper[j]);
+                int i = str.indexOf(anOper);
                 if (i < 0) break;
-                int ai = getDoubleIndex(str, i + oper[j].length() - 1, false);
-                Double a = doMath(Double.parseDouble(str.substring(i + oper[j].length(), ai)), oper[j].charAt(0));
+                int ai = getDoubleIndex(str, i + anOper.length() - 1, false);
+                Double a = doMath(Double.parseDouble(str.substring(i + anOper.length(), ai)), anOper.charAt(0));
                 str = str.substring(0, i) + String.valueOf(a) + str.substring(ai + 1, str.length());
             }
         for (int i = 1; i < str.length(); i++)
@@ -27,14 +27,14 @@ public class Calculator {
                 System.out.print("\nb=" + Double.parseDouble(str.substring(i + 1, bi)));
                 Double a = doMath(Double.parseDouble(str.substring(ai, i)), Double.parseDouble(str.substring(i + 1, bi)), str.charAt(i));
                 System.out.print("\n" + str);
-                str = str.substring(0, ai) +  new Formatter(Locale.US).format("%.16f",a) + str.substring(bi, str.length());
+                str = str.substring(0, ai) +  new Formatter(Locale.US).format("%.16f", a) + str.substring(bi, str.length());
                 System.out.print("\n!" + str);
                 i=1;
             }
         return str;
     }
 
-    public static int getDoubleIndex(String str, int index, boolean invert) {
+    private static int getDoubleIndex(String str, int index, boolean invert) {
         int g = 1;
         int i = index + 2;
         boolean t = false;
@@ -55,7 +55,7 @@ public class Calculator {
         return i + 1;
     }
 
-    public static Double doMath(Double first, Double second, char op) {
+    private static Double doMath(Double first, Double second, char op) {
         switch (op) {
             case '+':
                 return first + second;
@@ -70,7 +70,7 @@ public class Calculator {
         }
     }
 
-    public static Double doMath(Double first, char op) {
+    private static Double doMath(Double first, char op) {
         switch (op) {
             case 's':
                 return Math.sqrt(first);
