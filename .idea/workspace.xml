@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="babae6fa-1955-4d86-857e-b0cd262274d2" name="Default" comment="* + 56*√*√&#10;150/20% % % = % % %&#10;fin">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/CalcField.java" afterPath="$PROJECT_DIR$/src/CalcField.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Calculator.java" afterPath="$PROJECT_DIR$/src/Calculator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/UI.java" afterPath="$PROJECT_DIR$/src/UI.java" />
+    <list default="true" id="babae6fa-1955-4d86-857e-b0cd262274d2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Calculator.iws" />
@@ -446,7 +443,11 @@
       <created>1402338350391</created>
       <updated>1402338350391</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="* + 56*√*√&#10;150/20% % % = % % %&#10;fin">
+      <created>1402344138233</created>
+      <updated>1402344138233</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
