@@ -3,6 +3,7 @@ import java.util.Locale;
 class Calculator {
     public static void main(String[] args) {
         new UI();
+      // System.out.print(calculat("0+54+sqrt(56)+47"));
     }
     public static String calculat(String str) {
         if (str.length() == 0)
@@ -21,7 +22,7 @@ class Calculator {
                 if ((j==1)&&(Double.parseDouble(str.substring(i + anOper.length(), ai)) == 0))
                     return "ERROR";
                 Double a = doMath(Double.parseDouble(str.substring(i + anOper.length(), ai)), anOper.charAt(0));
-                str = str.substring(0, i) + String.format("%.20e",a) + str.substring(ai + 1, str.length());
+                str = str.substring(0, i) + String.format("%.40e",a) + str.substring(ai + 1, str.length());
             }
         int ai = 0;
         for (int i = 1; i < str.length(); i++)
@@ -35,7 +36,7 @@ class Calculator {
                 if(a==null)
                     return "OVERFLOW";
                 System.out.print("\n" + str);
-                str = String.format("%.20e", a) + str.substring(bi, str.length());
+                str = String.format("%.40e", a) + str.substring(bi, str.length());
                 System.out.print("\n!" + str);
                 i=1;
             }
@@ -43,7 +44,7 @@ class Calculator {
     }
     static String format(String s){
         String str=String.format("%e", Double.parseDouble(s));
-        s=String.format("%.20f", Double.parseDouble(s));
+        s=String.format("%.18f", Double.parseDouble(s));
         int i=s.length();
         if (s.contains("."))
             for(i=s.length()-1;i>s.indexOf(".");i--)
@@ -66,9 +67,14 @@ class Calculator {
         int i = index + 2;
         boolean t = false;
         for (; (i >= 0) && (i < str.length()); i += g)
-            if (((str.charAt(i) < '0') || (str.charAt(i) > '9')) && (str.charAt(i) != '.') && (str.charAt(i) != '-')&& (str.charAt(i) != 'e'))
+            if (((str.charAt(i) < '0') || (str.charAt(i) > '9')) && (str.charAt(i) != '.') && (str.charAt(i) != '-'))
             {
-                if((i+g >= 0) && (i+g < str.length()&& (str.charAt(i+g) == 'e')))
+                if(str.charAt(i) == 'e')
+                {
+                    i+=2*g;
+                    continue;
+                }
+                if((i+g >= 0) && (i+g < str.length())&& (str.charAt(i+g) == 'e'))
                     continue;
                 break;
             }

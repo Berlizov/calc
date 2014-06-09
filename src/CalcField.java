@@ -79,7 +79,10 @@ class CalcField extends JTextField {
         setAdditionalString("");
     }
     public void clearLastOperationAdditionalString() {
-        setAdditionalString(getAdditionalString().substring(0, getLastOperIndexAdditionalString() ));
+        setAdditionalString(getAdditionalString().substring(0, getLastOperIndexAdditionalString()));
+    }
+    public void clearLastOperationAdditionalString(int i) {
+        setAdditionalString(getAdditionalString().substring(0, getLastOperIndexAdditionalString()+i));
     }
     int getLastOperIndexAdditionalString() {
         String s = getAdditionalString();
@@ -92,9 +95,15 @@ class CalcField extends JTextField {
                 break;
             }
             else if((i+4<len)&&(s.substring(i,i+4).equals("sqrt")))
+            {
+                i--;
                 break;
+            }
             else if((i+8<len)&&(s.substring(i,i+8).equals("reciproc")))
+            {
+                i--;
                 break;
+            }
         System.out.print(s.substring(i));
         return i;
     }

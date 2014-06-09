@@ -18,6 +18,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
             {"4", "5", "6", "*", "1/x"},
             {"1", "2", "3", "-", "="},
             {"0", "", ".", "+", ""}};
+    private String lastValue="0";
     public UI() {
         super("Calculator");
         System.out.print(String.format("%.20f",(0.3+0.235)/147));
@@ -133,6 +134,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
                 func = false;
                 func11 = false;
                 add = true;
+                lastValue="0";
             }
         } else if (string.equals("±")) {
             String str = cf.getMainString();
@@ -146,7 +148,16 @@ class UI extends JFrame implements ActionListener, KeyListener {
         } else if (string.equals("%")) {
             String tstr=cf.getAdditionalString();
             if(tstr.length()==0)
-                cf.setAdditionalString("0+");
+            {
+                if(lastValue.equals("0"))
+                {
+                    cf.setAdditionalString("0+");
+                    cf.clearMainString();
+                }
+                else
+                    cf.setMainString((Calculator.calculat(lastValue+"/100*"+Double.parseDouble(cf.getMainString()))));
+            }
+            else
             cf.setMainString(String.valueOf(Double.parseDouble(Calculator.calculat(cf.getAdditionalString().substring(0, cf.getAdditionalString().length() - 1))) / 100 * Double.parseDouble(cf.getMainString())));
         } else if (string.equals("√")) {
             calc("sqrt");
@@ -161,6 +172,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
             else
                 cf.setAdditionalString(cf.getMainString() + last_oper);
             cf.setMainString(Calculator.calculat(cf.getAdditionalString()));
+            lastValue=cf.getMainString();
             cf.clearAdditionalString();
         } else {
             if (add)
@@ -184,8 +196,20 @@ class UI extends JFrame implements ActionListener, KeyListener {
             cf.setMemory(true);
     }
     void calc(String oper) {
+        int i=1;
+        String string=cf.getAdditionalString();
+        int t=0;
+        for(int j=0;j<string.length();j++)
+        {
+            if(!string.substring(j).contains(oper))
+                break;
+            j+=string.substring(j).indexOf(oper);
+            t++;
+        }
+        if((string.length()>0)&&(string.charAt(0)==oper.charAt(0))&&(t<2))
+            i=0;
         if (!add)
-            cf.clearLastOperationAdditionalString();
+            cf.clearLastOperationAdditionalString(i);
         String s = oper + "(" + cf.getMainString() + ")";
         cf.appendAdditionalString(s);
         cf.setMainString(Calculator.calculat(s));
