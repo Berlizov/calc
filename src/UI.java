@@ -12,13 +12,12 @@ class UI extends JFrame implements ActionListener, KeyListener {
     private boolean add = true;
     private String last_oper = "+0";
     private String memory = "0";
-    String[][] B_Str = {{"MC", "MR", "MS", "M+", "M-"},
+    private final String[][] B_Str = {{"MC", "MR", "MS", "M+", "M-"},
             {"←", "CE", "C", "±", "√"},
             {"7", "8", "9", "/", "%"},
             {"4", "5", "6", "*", "1/x"},
             {"1", "2", "3", "-", "="},
             {"0", "", ".", "+", ""}};
-    JButton[][] b;
 
     public UI() {
         super("Calculator");
@@ -61,9 +60,9 @@ class UI extends JFrame implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
         String c=KeyEvent.getKeyText(e.getKeyCode());
         System.out.print(c);
-        if((c=="Enter")||(c=="Equals"))
+        if((c.equals("Enter"))||(c.equals("Equals")))
             c="=";
-        else if((c=="Minus"))
+        else if((c.equals("Minus")))
             c="-";
         else
             c=String.format("%c",c.charAt(c.length()-1));
@@ -84,8 +83,15 @@ class UI extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         action(((JButton) e.getSource()).getText());
     }
-    public void action(String string) {
-
+    void action(String string) {
+        if(cf.hasError())
+        {
+            cf.setMainString("0");
+            cf.clearAdditionalString();
+            func = false;
+            func11 = false;
+            add = true;
+        }
         if ((string.length() == 1) && (string.charAt(0) >= '0') && (string.charAt(0) <= '9')) {
             if (!add) {
                 cf.clearMainString();

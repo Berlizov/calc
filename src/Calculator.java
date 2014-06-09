@@ -1,21 +1,25 @@
-import java.util.Formatter;
 import java.util.Locale;
 
 class Calculator {
     public static void main(String[] args) {
-        new UI();  // new Calculator();
-        //System.out.print("****" + calculat("0+5+5+5+5+5+5+5"));
+        new UI();
     }
     public static String calculat(String str) {
         if (str.length() == 0)
             return "";
         String[] oper = {"sqrt(", "reciproc("};
         Locale.setDefault(Locale.US);
-        for (String anOper : oper)
+        for (int j=0;j<oper.length;j++)
             while (true) {
+                String anOper=oper[j];
                 int i = str.indexOf(anOper);
                 if (i < 0) break;
+
                 int ai = getDoubleIndex(str, i + anOper.length() - 1);
+                if ((j==0)&&(Double.parseDouble(str.substring(i + anOper.length(), ai)) < 0))
+                    return "ERROR";
+                if ((j==1)&&(Double.parseDouble(str.substring(i + anOper.length(), ai)) == 0))
+                    return "ERROR";
                 Double a = doMath(Double.parseDouble(str.substring(i + anOper.length(), ai)), anOper.charAt(0));
                 str = str.substring(0, i) + String.format("%.20e",a) + str.substring(ai + 1, str.length());
             }
@@ -25,7 +29,7 @@ class Calculator {
                 System.out.print("\na=" + Double.parseDouble(str.substring(ai, i)));
                 int bi = getDoubleIndex(str, i);
                 if ((Double.parseDouble(str.substring(i + 1, bi)) == 0) && (str.charAt(i) == '/'))
-                    return "Не возможно";
+                    return "ERROR";
                 System.out.print("\nb=" + Double.parseDouble(str.substring(i + 1, bi)));
                 Double a = doMath(Double.parseDouble(str.substring(ai, i)), Double.parseDouble(str.substring(i + 1, bi)), str.charAt(i));
                 System.out.print("\n" + str);
@@ -36,7 +40,7 @@ class Calculator {
         return format(str);
     }
     static String format(String s){
-        String str=String.format("%e", Double.parseDouble(s));;
+        String str=String.format("%e", Double.parseDouble(s));
         s=String.format("%.20f", Double.parseDouble(s));
         int i=s.length();
         if (s.contains("."))

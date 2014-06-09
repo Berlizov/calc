@@ -5,6 +5,7 @@ import java.util.Locale;
 class CalcField extends JTextField {
     private boolean memory;
     private String additionalString;
+    private boolean error=false;
 
     public CalcField() {
         super("0");
@@ -43,7 +44,6 @@ class CalcField extends JTextField {
             g2d.drawString("M", 12, getHeight() - 12);
         }
     }
-
     public void deleteLast() {
         String str = getText();
         if (str.length() < 2)
@@ -64,6 +64,12 @@ class CalcField extends JTextField {
     }
 
     public void setMainString(String s){
+        if (s.equals("ERROR"))
+        {
+            error=true;
+            setText(s);
+            return;
+        }
         setText(Calculator.format(s));
     }
 
@@ -104,7 +110,11 @@ class CalcField extends JTextField {
         System.out.print(s.substring(i));
         return i;
     }
-
+    public boolean hasError(){
+        boolean t=error;
+        error=false;
+        return t;
+    }
     public String getLastOperationAdditionalString() {
         return getAdditionalString().substring(getLastOperIndexAdditionalString(), getAdditionalString().length());
     }
