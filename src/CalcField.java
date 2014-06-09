@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
 
 class CalcField extends JTextField {
     private boolean memory;
@@ -7,6 +8,7 @@ class CalcField extends JTextField {
 
     public CalcField() {
         super("0");
+        Locale.setDefault(Locale.US);
         setHorizontalAlignment(JTextField.RIGHT);
         setPreferredSize(new Dimension(100, 50));
         setMinimumSize(getPreferredSize());
@@ -18,7 +20,7 @@ class CalcField extends JTextField {
     }
 
     public void appendMainString(String str) {
-        if (super.getText().length() == 16)
+        if ((((super.getText().charAt(0)!='-')&&(super.getText().length() == 16)))||(((super.getText().charAt(0)=='-')&&(super.getText().length() == 17))))
             return;
         if (!((this.getText().indexOf(".") > 0) && (str.equals("."))))
             super.setText(this.getText() + str);
@@ -61,17 +63,8 @@ class CalcField extends JTextField {
         return getText();
     }
 
-    public void setMainString(String s) {
-        int i=s.length();
-        if (s.contains("."))
-            for(i=s.length()-1;i>s.indexOf(".");i--)
-                if((s.charAt(i)!='0')&&(s.charAt(i)!='.'))
-                {i++;
-                    break;}
-        s = String.valueOf(s.substring(0,i));
-        if(s.length()>16)
-            s=s.substring(0,16);
-        setText(s);
+    public void setMainString(String s){
+        setText(Calculator.format(s));
     }
 
     public void clearMainString() {
@@ -96,17 +89,18 @@ class CalcField extends JTextField {
 
     int getLastOperIndexAdditionalString() {
         String s = getAdditionalString();
-        int i = s.length()-1;
+        int len=s.length()-1;
+        int i = len;
         for (; i > 0; i--)
-            if ((s.charAt(i) == '+') || (s.charAt(i) == '/') || (s.charAt(i) == '*') || (s.charAt(i) == '-')) {
+            if (((s.charAt(i) == '+') || (s.charAt(i) == '/') || (s.charAt(i) == '*') || (s.charAt(i) == '-'))) {
+                if((s.charAt(i-1) == 'e'))
+                    continue;
                 break;
-            }/* else if (s.charAt(i) == '-')
-            {
-                if((i-1>0)&&(s.charAt(i-1)>='0')&&(s.charAt(i-1)<='9'))
-                    break;
-            }*/
-            else if((s.substring(i).equals("sqrt"))||(s.substring(i).equals("reciproc")))
-                System.out.print("1111111111");
+            }
+            else if((i+4<len)&&(s.substring(i,i+4).equals("sqrt")))
+                break;
+            else if((i+8<len)&&(s.substring(i,i+8).equals("reciproc")))
+                break;
         System.out.print(s.substring(i));
         return i;
     }

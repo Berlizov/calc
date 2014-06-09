@@ -22,6 +22,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
 
     public UI() {
         super("Calculator");
+        System.out.print(String.format("%.20f",(0.3+0.235)/147));
         setMinimumSize(new Dimension(300, 300));
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
@@ -112,14 +113,14 @@ class UI extends JFrame implements ActionListener, KeyListener {
         } else if (string.equals("MR")) {
             cf.setMainString(memory);
         } else if (string.equals("MS")) {
-            cf.setMemory(Double.valueOf(cf.getMainString())!=0);
             memory = cf.getMainString();
+            checkMem();
         } else if (string.equals("M+")) {
-            cf.setMemory(true);
             memory = String.valueOf(Double.parseDouble(memory) + Double.parseDouble(cf.getMainString()));
+            checkMem();
         } else if (string.equals("M-")) {
-            cf.setMemory(true);
             memory = String.valueOf(Double.parseDouble(memory) - Double.parseDouble(cf.getMainString()));
+            checkMem();
         } else if (string.equals("←")) {
             cf.deleteLast();
         } else if (string.charAt(0) == 'C') {
@@ -174,7 +175,12 @@ class UI extends JFrame implements ActionListener, KeyListener {
             func = true;
         }
     }
-
+    void checkMem(){
+        if(Double.parseDouble(memory)==0)
+            cf.setMemory(false);
+        else
+            cf.setMemory(true);
+    }
     void calc(String oper) {
         if (!add)
             cf.clearLastOperationAdditionalString();
