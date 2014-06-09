@@ -2,14 +2,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-class UI extends JFrame implements ActionListener {
+class UI extends JFrame implements ActionListener, KeyListener {
     private final CalcField cf;
     private boolean func = false;
     private boolean func11 = false;
     private boolean add = true;
     private String last_oper = "+0";
     private String memory = "0";
+    String[][] B_Str = {{"MC", "MR", "MS", "M+", "M-"},
+            {"←", "CE", "C", "±", "√"},
+            {"7", "8", "9", "/", "%"},
+            {"4", "5", "6", "*", "1/x"},
+            {"1", "2", "3", "-", "="},
+            {"0", "", ".", "+", ""}};
+    JButton[][] b;
 
     public UI() {
         super("Calculator");
@@ -24,34 +33,58 @@ class UI extends JFrame implements ActionListener {
         c.gridwidth = 5;
         cf = new CalcField();
         add(cf, c);
-        String[][] str = {{"MC", "MR", "MS", "M+", "M-"},
-                {"←", "CE", "C", "±", "√"},
-                {"7", "8", "9", "/", "%"},
-                {"4", "5", "6", "*", "1/x"},
-                {"1", "2", "3", "-", "="},
-                {"0", "", ",", "+", ""}};
-        for (int i = 1; i < 7; i++)
+        JButton[][] b=new JButton[10][10];
+        for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++) {
-                if (!str[i - 1][j].equals("")) {
+                if (!B_Str [i][j].equals("")) {
                     c.gridwidth = 1;
                     c.gridheight = 1;
-                    if (str[i - 1][j].equals("0"))
+                    if (B_Str [i][j].equals("0"))
                         c.gridwidth = 2;
-                    if (str[i - 1][j].equals("="))
+                    if (B_Str [i][j].equals("="))
                         c.gridheight = 2;
                     c.gridx = j;
-                    c.gridy = i;
-                    JButton b = new JButton(str[i - 1][j]);
-                    b.addActionListener(this);
-                    add(b, c);
+                    c.gridy = i+1;
+                    b[i][j] = new JButton(B_Str[i][j]);
+                    b[i][j].addActionListener(this);
+                    add(b[i][j], c);
+                    b[i][j].addKeyListener(this);
                 }
             }
         setVisible(true);
     }
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    public void keyReleased(KeyEvent e) {
+        String c=KeyEvent.getKeyText(e.getKeyCode());
+        System.out.print(c);
+        if((c=="Enter")||(c=="Equals"))
+            c="=";
+        else if((c=="Minus"))
+            c="-";
+        else
+            c=String.format("%c",c.charAt(c.length()-1));
+        for (int i = 0; i < 6; i++)
+            for (int j = 0; j < 5; j++) {
+                if((!B_Str [i][j].equals(""))&&(B_Str[i][j].equals(c)))
+                {
+                    System.out.print(c);
+                    action(B_Str[i][j]);
+                }
+            }
+    }
+    public void keyTyped(KeyEvent e) {
+
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String string = ((JButton) e.getSource()).getText();
+        action(((JButton) e.getSource()).getText());
+    }
+    public void action(String string) {
+
         if ((string.length() == 1) && (string.charAt(0) >= '0') && (string.charAt(0) <= '9')) {
             if (!add) {
                 cf.clearMainString();
@@ -67,7 +100,7 @@ class UI extends JFrame implements ActionListener {
                 cf.setMainString(string);
             else
                 cf.appendMainString(string);
-        } else if (string.equals(",")) {
+        } else if (string.equals(".")) {
             if (func) {
                 cf.clearMainString();
                 func = false;
@@ -108,6 +141,9 @@ class UI extends JFrame implements ActionListener {
         } else if (string.equals("1/x")) {
             calc("reciproc");
         } else if (string.equals("%")) {
+            String tstr=cf.getAdditionalString();
+            if(tstr.length()==0)
+                cf.setAdditionalString("0+");
             cf.setMainString(String.valueOf(Double.parseDouble(Calculator.calculat(cf.getAdditionalString().substring(0, cf.getAdditionalString().length() - 1))) / 100 * Double.parseDouble(cf.getMainString())));
         } else if (string.equals("√")) {
             calc("sqrt");

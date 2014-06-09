@@ -97,20 +97,17 @@ class CalcField extends JTextField {
     int getLastOperIndexAdditionalString() {
         String s = getAdditionalString();
         int i = s.length()-1;
-        boolean t = false;
         for (; i > 0; i--)
-            if ((s.charAt(i) == '+') || (s.charAt(i) == '/') || (s.charAt(i) == '*')) {
-                t = false;
+            if ((s.charAt(i) == '+') || (s.charAt(i) == '/') || (s.charAt(i) == '*') || (s.charAt(i) == '-')) {
                 break;
-            } else if (s.charAt(i) == '-')
-                if (t) {
-                    t = false;
+            }/* else if (s.charAt(i) == '-')
+            {
+                if((i-1>0)&&(s.charAt(i-1)>='0')&&(s.charAt(i-1)<='9'))
                     break;
-                } else
-                    t = true;
-        if (t)
-            i ++;
-        System.out.print(getAdditionalString().substring(i, getAdditionalString().length()));
+            }*/
+            else if((s.substring(i).equals("sqrt"))||(s.substring(i).equals("reciproc")))
+                System.out.print("1111111111");
+        System.out.print(s.substring(i));
         return i;
     }
 
