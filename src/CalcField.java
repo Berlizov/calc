@@ -6,7 +6,6 @@ class CalcField extends JTextField {
     private boolean memory;
     private String additionalString;
     private boolean error=false;
-
     public CalcField() {
         super("0");
         Locale.setDefault(Locale.US);
@@ -19,18 +18,15 @@ class CalcField extends JTextField {
         additionalString = "";
         setFont(getFont());
     }
-
     public void appendMainString(String str) {
         if ((((super.getText().charAt(0)!='-')&&(super.getText().length() == 16)))||(((super.getText().charAt(0)=='-')&&(super.getText().length() == 17))))
             return;
         if (!((this.getText().indexOf(".") > 0) && (str.equals("."))))
             super.setText(this.getText() + str);
     }
-
     public void appendAdditionalString(String str) {
         setAdditionalString(getAdditionalString() + str);
     }
-
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
@@ -58,41 +54,33 @@ class CalcField extends JTextField {
     public void setMemory(boolean memory) {
         this.memory = memory;
     }
-
     public String getMainString() {
         return getText();
     }
-
     public void setMainString(String s){
-        if (s.equals("ERROR"))
+        if (s.equals("ERROR") || s.equals("OVERFLOW")|| s.toUpperCase().contains("INFINITY"))
         {
             error=true;
-            setText(s);
+            setText(s.toUpperCase());
             return;
         }
         setText(Calculator.format(s));
     }
-
     public void clearMainString() {
         setText("0");
     }
-
     public String getAdditionalString() {
         return additionalString;
     }
-
     public void setAdditionalString(String additionalString) {
         this.additionalString = additionalString;
     }
-
     public void clearAdditionalString() {
         setAdditionalString("");
     }
-
     public void clearLastOperationAdditionalString() {
         setAdditionalString(getAdditionalString().substring(0, getLastOperIndexAdditionalString() ));
     }
-
     int getLastOperIndexAdditionalString() {
         String s = getAdditionalString();
         int len=s.length()-1;

@@ -18,7 +18,6 @@ class UI extends JFrame implements ActionListener, KeyListener {
             {"4", "5", "6", "*", "1/x"},
             {"1", "2", "3", "-", "="},
             {"0", "", ".", "+", ""}};
-
     public UI() {
         super("Calculator");
         System.out.print(String.format("%.20f",(0.3+0.235)/147));
@@ -54,9 +53,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
         setVisible(true);
     }
     public void keyPressed(KeyEvent e) {
-
     }
-
     public void keyReleased(KeyEvent e) {
         String c=KeyEvent.getKeyText(e.getKeyCode());
         System.out.print(c);
@@ -78,7 +75,6 @@ class UI extends JFrame implements ActionListener, KeyListener {
     public void keyTyped(KeyEvent e) {
 
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         action(((JButton) e.getSource()).getText());
@@ -86,8 +82,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
     void action(String string) {
         if(cf.hasError())
         {
-            cf.setMainString("0");
-            cf.clearAdditionalString();
+            cf.clearMainString();
             func = false;
             func11 = false;
             add = true;
@@ -128,7 +123,8 @@ class UI extends JFrame implements ActionListener, KeyListener {
             memory = String.valueOf(Double.parseDouble(memory) - Double.parseDouble(cf.getMainString()));
             checkMem();
         } else if (string.equals("←")) {
-            cf.deleteLast();
+            if((!cf.getMainString().toUpperCase().contains("E"))&&(!func))
+                cf.deleteLast();
         } else if (string.charAt(0) == 'C') {
             cf.clearMainString();
             if (string.length() == 1){

@@ -32,6 +32,8 @@ class Calculator {
                     return "ERROR";
                 System.out.print("\nb=" + Double.parseDouble(str.substring(i + 1, bi)));
                 Double a = doMath(Double.parseDouble(str.substring(ai, i)), Double.parseDouble(str.substring(i + 1, bi)), str.charAt(i));
+                if(a==null)
+                    return "OVERFLOW";
                 System.out.print("\n" + str);
                 str = String.format("%.20e", a) + str.substring(bi, str.length());
                 System.out.print("\n!" + str);
@@ -77,22 +79,33 @@ class Calculator {
                     t = true;
         return i;
     }
-
     private static Double doMath(Double first, Double second, char op) {
+        double result;
         switch (op) {
             case '+':
-                return first + second;
+                result=first + second;
+                if ((first != 0 && second != 0) && result == 0 && !(!first.equals(second) && Math.abs(first) == Math.abs(second)))
+                    return null;
+                return result;
             case '-':
-                return first - second;
+                result=first - second;
+                if (result == 0.0 && !first.equals(second))
+                    return null;
+                return result;
             case '*':
-                return first * second;
+                result=first * second;
+                if (result == 0 && first != 0 && second != 0)
+                    return null;
+                return result;
             case '/':
-                return first / second;
+                result=first / second;
+                if ((first != 0 && second != 0) && result == 0 )
+                    return null;
+                return result;
             default:
                 return 0.0;
         }
     }
-
     private static Double doMath(Double first, char op) {
         switch (op) {
             case 's':
