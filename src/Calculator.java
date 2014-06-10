@@ -1,9 +1,30 @@
+import java.math.BigDecimal;
 import java.util.Locale;
 
 class Calculator {
     public static void main(String[] args) {
         new UI();
-      // System.out.print(calculat("0+54+sqrt(56)+47"));
+        Double d=9999999999999998.0;
+        System.out.print('\n');
+        System.out.print(d);
+        System.out.print('\n');
+        System.out.print(Long.toBinaryString(Double.doubleToLongBits(d)));
+        d=9999999999999997.0;
+        System.out.print('\n');
+        System.out.print(d);
+        System.out.print('\n');
+        System.out.print(Long.toBinaryString(Double.doubleToLongBits(d)));
+        d=9999999999999999.0;
+        System.out.print('\n');
+        System.out.print(d);
+        System.out.print('\n');
+        System.out.print(Long.toBinaryString(Double.doubleToLongBits(d)));
+        d=10000000000000001.0;
+        System.out.print('\n');
+        System.out.print(d);
+        System.out.print('\n');
+        System.out.print(Long.toBinaryString(Double.doubleToLongBits(d)));
+
     }
     public static String calculat(String str) {
         if (str.length() == 0)
@@ -29,10 +50,25 @@ class Calculator {
             if (((str.charAt(i) == '*') || (str.charAt(i) == '/') || (str.charAt(i) == '+') || (str.charAt(i) == '-'))&&(str.charAt(i-1)!='e')) {
                 System.out.print("\na=" + Double.parseDouble(str.substring(ai, i)));
                 int bi = getDoubleIndex(str, i);
+                int tempa=0;
+                int tempb=0;
+                for(int yi=i+1;yi<bi;yi++)
+                {
+                    if(str.toUpperCase().charAt(yi)=='E')
+                        tempb++;
+                }
+                for(int yi=ai;yi<i;yi++)
+                {
+                    if(str.toUpperCase().charAt(yi)=='E')
+                        tempa++;
+                }
+                if((tempa>1)||(tempb>1))
+                    return "ERROR";
                 if ((Double.parseDouble(str.substring(i + 1, bi)) == 0) && (str.charAt(i) == '/'))
                     return "ERROR";
                 System.out.print("\nb=" + Double.parseDouble(str.substring(i + 1, bi)));
                 Double a = doMath(Double.parseDouble(str.substring(ai, i)), Double.parseDouble(str.substring(i + 1, bi)), str.charAt(i));
+                //Double a = doMath(new BigDecimal(str.substring(ai, i)), new BigDecimal(str.substring(i+1, bi)), str.charAt(i));
                 if(a==null)
                     return "OVERFLOW";
                 System.out.print("\n" + str);
@@ -58,7 +94,7 @@ class Calculator {
         if(s.length()>t)
             s=s.substring(0,t);
         Double d=Math.abs(Double.parseDouble(str)-Double.parseDouble(s));
-        if((d>0.001)||(Math.abs(Double.parseDouble(str))<0.001)&&(Double.parseDouble(str)!=0))
+        if(((Double.parseDouble(str)>10000000000000001.0)||(Double.parseDouble(str)<0.0001))&&(Double.parseDouble(str)!=0))
             s=str;
         return s;
     }
@@ -108,6 +144,25 @@ class Calculator {
                 if ((first != 0 && second != 0) && result == 0 )
                     return null;
                 return result;
+            default:
+                return 0.0;
+        }
+    }
+    private static Double doMath(BigDecimal first, BigDecimal second, char op) {
+        BigDecimal result;
+        switch (op) {
+            case '+':
+                result=first.add(second);
+                return result.doubleValue();
+            case '-':
+                result=first.subtract(second);
+                return result.doubleValue();
+            case '*':
+                result=first.multiply(second);
+                return result.doubleValue();
+            case '/':
+                result=first.divide(second);
+                return result.doubleValue();
             default:
                 return 0.0;
         }

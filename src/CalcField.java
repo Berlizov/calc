@@ -61,7 +61,7 @@ class CalcField extends JTextField {
         if (s.equals("ERROR") || s.equals("OVERFLOW")|| s.toUpperCase().contains("INFINITY"))
         {
             error=true;
-            setText(s.toUpperCase());
+            setText("ERROR");
             return;
         }
         setText(Calculator.format(s));
@@ -108,9 +108,10 @@ class CalcField extends JTextField {
         return i;
     }
     public boolean hasError(){
-        boolean t=error;
+        return error;
+    }
+    public void delError(){
         error=false;
-        return t;
     }
     public String getLastOperationAdditionalString() {
         return getAdditionalString().substring(getLastOperIndexAdditionalString(), getAdditionalString().length());

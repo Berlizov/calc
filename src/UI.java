@@ -1,3 +1,5 @@
+import sun.org.mozilla.javascript.internal.ast.Block;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
     private final CalcField cf;
     private boolean func = false;
     private boolean func11 = false;
+    private boolean func1234 = false;
     private boolean add = true;
     private String last_oper = "+0";
     private String memory = "0";
@@ -19,6 +22,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
             {"1", "2", "3", "-", "="},
             {"0", "", ".", "+", ""}};
     private String lastValue="0";
+    private boolean block=false;
     public UI() {
         super("Calculator");
         System.out.print(String.format("%.20f",(0.3+0.235)/147));
@@ -81,20 +85,16 @@ class UI extends JFrame implements ActionListener, KeyListener {
         action(((JButton) e.getSource()).getText());
     }
     void action(String string) {
-        if(cf.hasError())
+        if(!cf.hasError())
         {
-            cf.clearMainString();
-            func = false;
-            func11 = false;
-            add = true;
-        }
         if ((string.length() == 1) && (string.charAt(0) >= '0') && (string.charAt(0) <= '9')) {
-            if (!add) {
+            if (!add||func1234) {
                 cf.clearMainString();
                 cf.clearAdditionalString();
                 add = true;
             }
             func11 = false;
+            func1234=false;
             if (func) {
                 cf.clearMainString();
                 func = false;
@@ -128,6 +128,7 @@ class UI extends JFrame implements ActionListener, KeyListener {
                 cf.deleteLast();
         } else if (string.charAt(0) == 'C') {
             cf.clearMainString();
+            cf.delError();
             if (string.length() == 1){
                 cf.clearAdditionalString();
                 last_oper = "+0";
@@ -158,7 +159,12 @@ class UI extends JFrame implements ActionListener, KeyListener {
                     cf.setMainString((Calculator.calculat(lastValue+"/100*"+Double.parseDouble(cf.getMainString()))));
             }
             else
-            cf.setMainString(String.valueOf(Double.parseDouble(Calculator.calculat(cf.getAdditionalString().substring(0, cf.getAdditionalString().length() - 1))) / 100 * Double.parseDouble(cf.getMainString())));
+            {
+                int tttttt=1;
+                if(cf.getAdditionalString().charAt( cf.getAdditionalString().length()-1)==')')
+                    tttttt=0;
+                cf.setMainString(Calculator.calculat(cf.getAdditionalString().substring(0, cf.getAdditionalString().length()-tttttt) + "/100*" + Double.parseDouble(cf.getMainString())));
+            }
         } else if (string.equals("√")) {
             calc("sqrt");
         } else if (string.equals("=")) {
@@ -188,8 +194,23 @@ class UI extends JFrame implements ActionListener, KeyListener {
             func11=false;
             func = true;
         }
+            func1234=false;
+        }
+        else{
+            if (string.charAt(0) == 'C') {
+                cf.clearMainString();
+                cf.delError();
+                last_oper = "+0";
+                    cf.clearAdditionalString();
+                    func = false;
+                    func11 = false;
+                    add = true;
+                    lastValue="0";
+            }
+        }
     }
     void checkMem(){
+        func1234=true;
         if(Double.parseDouble(memory)==0)
             cf.setMemory(false);
         else
